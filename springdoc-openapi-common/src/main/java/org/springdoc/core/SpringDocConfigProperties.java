@@ -136,6 +136,11 @@ public class SpringDocConfigProperties {
 	private boolean preLoadingEnabled;
 
 	/**
+	 * Sort Paths alphabetically
+	 */
+	private boolean sortPaths = false;
+
+	/**
 	 * Is use fqn boolean.
 	 *
 	 * @return the boolean
@@ -493,6 +498,24 @@ public class SpringDocConfigProperties {
 	 */
 	public boolean isPreLoadingEnabled() {
 		return preLoadingEnabled;
+	}
+
+	/**
+	 * Is sort paths boolean.
+	 *
+	 * @return the boolean
+	 */
+	public boolean isSortPaths() {
+		return sortPaths;
+	}
+
+	/**
+	 * Sets sort paths.
+	 *
+	 * @param sortPaths True to enable alphabetic sorting of paths
+	 */
+	public void setSortPaths(boolean sortPaths) {
+		this.sortPaths = sortPaths;
 	}
 
 	/**

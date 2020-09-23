@@ -40,11 +40,13 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
 import io.swagger.v3.core.filter.SpecFilter;
+import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.ReflectionUtils;
 import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -78,7 +80,6 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.core.fn.AbstractRouterFunctionVisitor;
 import org.springdoc.core.fn.RouterFunctionData;
 import org.springdoc.core.fn.RouterOperation;
-
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -967,9 +968,26 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 	 * @return the yaml mapper
 	 */
 	protected ObjectMapper getYamlMapper() {
-		ObjectMapper objectMapper = Yaml.mapper();
+		ObjectMapper objectMapper = configureMapperMixins(Yaml.mapper());
+
+
 		YAMLFactory factory = (YAMLFactory) objectMapper.getFactory();
 		factory.configure(Feature.USE_NATIVE_TYPE_ID, false);
 		return objectMapper;
 	}
+
+	protected ObjectMapper getJsonMapper() {
+		return configureMapperMixins(Json.mapper());
+	}
+
+	protected ObjectMapper configureMapperMixins(ObjectMapper objectMapper) {
+		if (springDocConfigProperties.isSortPaths()) {
+			objectMapper.addMixIn(Paths.class, AlphabeticallySortedMixin.class);
+		}
+
+		return objectMapper;
+	}
+
+	@JsonPropertyOrder(alphabetic = true)
+	public abstract static class AlphabeticallySortedMixin {}
 }

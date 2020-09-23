@@ -178,9 +178,9 @@ public class OpenApiResource extends AbstractOpenApiResource {
 		calculateServerUrl(request, apiDocsUrl);
 		OpenAPI openAPI = this.getOpenApi();
 		if (!springDocConfigProperties.isWriterWithDefaultPrettyPrinter())
-			return Json.mapper().writeValueAsString(openAPI);
+			return getJsonMapper().writeValueAsString(openAPI);
 		else
-			return Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(openAPI);
+			return getJsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(openAPI);
 	}
 
 	/**
